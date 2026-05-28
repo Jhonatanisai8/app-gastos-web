@@ -19,72 +19,72 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+  private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final AuthenticationManager authenticationManager;
+  private final JwtTokenProvider jwtTokenProvider;
 
-    public JwtResponse register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateResourceException("Email already registered");
-        }
-
-        User user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .currency(request.getCurrency() != null ? request.getCurrency() : "PEN")
-                .build();
-
-        user = userRepository.save(user);
-
-        String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
-        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId());
-
-        return JwtResponse.builder()
-                .token(token)
-                .refreshToken(refreshToken)
-                .email(user.getEmail())
-                .build();
+  public JwtResponse register(RegisterRequest request) {
+    if (userRepository.existsByEmail(request.getEmail())) {
+      throw new DuplicateResourceException("Email already registered");
     }
 
-    public JwtResponse login(LoginRequest request) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        } catch (Exception e) {
-            throw new UnauthorizedException("Invalid email or password");
-        }
+    User user = User.builder()
+        .name(request.getName())
+        .email(request.getEmail())
+        .password(passwordEncoder.encode(request.getPassword()))
+        .currency(request.getCurrency() != null ? request.getCurrency() : "PEN")
+        .build();
 
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new BadRequestException("User not found"));
+    user = userRepository.save(user);
 
-        String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
-        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId());
+    String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
+    String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId());
 
-        return JwtResponse.builder()
-                .token(token)
-                .refreshToken(refreshToken)
-                .email(user.getEmail())
-                .build();
+    return JwtResponse.builder()
+        .token(token)
+        .refreshToken(refreshToken)
+        .email(user.getEmail())
+        .build();
+  }
+
+  public JwtResponse login(LoginRequest request) {
+    try {
+      authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+    } catch (Exception e) {
+      throw new UnauthorizedException("Invalid email or password");
     }
 
-    public JwtResponse refresh(String refreshToken) {
-        if (!jwtTokenProvider.validateToken(refreshToken)) {
-            throw new UnauthorizedException("Invalid or expired refresh token");
-        }
+    User user = userRepository.findByEmail(request.getEmail())
+        .orElseThrow(() -> new BadRequestException("User not found"));
 
-        Long userId = Long.valueOf(jwtTokenProvider.getUserIdFromToken(refreshToken));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException("User not found"));
+    String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
+    String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId());
 
-        String newToken = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
-        String newRefreshToken = jwtTokenProvider.generateRefreshToken(user.getId());
+    return JwtResponse.builder()
+        .token(token)
+        .refreshToken(refreshToken)
+        .email(user.getEmail())
+        .build();
+  }
 
-        return JwtResponse.builder()
-                .token(newToken)
-                .refreshToken(newRefreshToken)
-                .email(user.getEmail())
-                .build();
+  public JwtResponse refresh(String refreshToken) {
+    if (!jwtTokenProvider.validateToken(refreshToken)) {
+      throw new UnauthorizedException("Invalid or expired refresh token");
     }
+
+    Long userId = Long.valueOf(jwtTokenProvider.getUserIdFromToken(refreshToken));
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new BadRequestException("User not found"));
+
+    String newToken = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
+    String newRefreshToken = jwtTokenProvider.generateRefreshToken(user.getId());
+
+    return JwtResponse.builder()
+        .token(newToken)
+        .refreshToken(newRefreshToken)
+        .email(user.getEmail())
+        .build();
+  }
 }
