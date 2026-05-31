@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../hooks/useAuth";
 
-export function RegistrationLogin() {
+export function RegistrationLogin({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -28,7 +28,9 @@ export function RegistrationLogin() {
     try {
       const data = await login(email, password);
       console.log(data);
-      Alert.alert("Login exitoso");
+      if (onLoginSuccess) {
+        onLoginSuccess(data);
+      }
     } catch (error) {
       Alert.alert(
         "Error de Autenticación",
