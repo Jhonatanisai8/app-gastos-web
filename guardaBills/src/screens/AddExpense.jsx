@@ -89,15 +89,7 @@ export function AddExpense({ onBack, onSave }) {
 
   return (
     <View className="flex-1 bg-background w-full">
-      <View className="bg-white border-b border-zinc-100 px-5 h-16 w-full flex-row justify-between items-center shadow-sm">
-        <TouchableOpacity onPress={onBack} className="p-2 -ml-2">
-          <Ionicons name="arrow-back" size={24} className="text-on-surface" />
-        </TouchableOpacity>
-        <Text className="text-xl font-bold text-primary">Financial Zen</Text>
-        <View className="w-10" />
-      </View>
-
-      <View className="flex-1 justify-between pb-6">
+      <View className="flex-1 justify-between pb-24">
         <ScrollView
           className="flex-1"
           contentContainerStyle={{ flexGrow: 1 }}
@@ -109,7 +101,7 @@ export function AddExpense({ onBack, onSave }) {
             </Text>
             <View className="flex-row items-center gap-2">
               <Text className="text-headline-lg font-bold text-primary-container">
-                $
+                S/
               </Text>
               <Text className="text-headline-xl font-extrabold text-primary text-5xl">
                 {displayAmount}
@@ -180,100 +172,100 @@ export function AddExpense({ onBack, onSave }) {
               />
             </View>
           </View>
-        </ScrollView>
 
-        <View className="px-margin-edge mt-stack-lg mb-4">
-          <View className="flex-col gap-2">
-            <View className="flex-row gap-2">
-              {["1", "2", "3"].map((num) => (
+          <View className="px-margin-edge">
+            <View className="flex-col gap-2">
+              <View className="flex-row gap-2">
+                {["1", "2", "3"].map((num) => (
+                  <TouchableOpacity
+                    key={num}
+                    onPress={() => handleKeyPress(num)}
+                    activeOpacity={0.7}
+                    className="flex-1 h-14 bg-surface-container-lowest shadow-sm border border-zinc-100 rounded-xl items-center justify-center active:scale-95"
+                  >
+                    <Text className="text-headline-md font-bold text-on-surface">
+                      {num}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <View className="flex-row gap-2">
+                {["4", "5", "6"].map((num) => (
+                  <TouchableOpacity
+                    key={num}
+                    onPress={() => handleKeyPress(num)}
+                    activeOpacity={0.7}
+                    className="flex-1 h-14 bg-surface-container-lowest shadow-sm border border-zinc-100 rounded-xl items-center justify-center active:scale-95"
+                  >
+                    <Text className="text-headline-md font-bold text-on-surface">
+                      {num}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <View className="flex-row gap-2">
+                {["7", "8", "9"].map((num) => (
+                  <TouchableOpacity
+                    key={num}
+                    onPress={() => handleKeyPress(num)}
+                    activeOpacity={0.7}
+                    className="flex-1 h-14 bg-surface-container-lowest shadow-sm border border-zinc-100 rounded-xl items-center justify-center active:scale-95"
+                  >
+                    <Text className="text-headline-md font-bold text-on-surface">
+                      {num}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <View className="flex-row gap-2">
                 <TouchableOpacity
-                  key={num}
-                  onPress={() => handleKeyPress(num)}
+                  onPress={() => handleKeyPress(".")}
                   activeOpacity={0.7}
                   className="flex-1 h-14 bg-surface-container-lowest shadow-sm border border-zinc-100 rounded-xl items-center justify-center active:scale-95"
                 >
                   <Text className="text-headline-md font-bold text-on-surface">
-                    {num}
+                    .
                   </Text>
                 </TouchableOpacity>
-              ))}
-            </View>
-
-            <View className="flex-row gap-2">
-              {["4", "5", "6"].map((num) => (
                 <TouchableOpacity
-                  key={num}
-                  onPress={() => handleKeyPress(num)}
+                  onPress={() => handleKeyPress("0")}
                   activeOpacity={0.7}
                   className="flex-1 h-14 bg-surface-container-lowest shadow-sm border border-zinc-100 rounded-xl items-center justify-center active:scale-95"
                 >
                   <Text className="text-headline-md font-bold text-on-surface">
-                    {num}
+                    0
                   </Text>
                 </TouchableOpacity>
-              ))}
-            </View>
-
-            <View className="flex-row gap-2">
-              {["7", "8", "9"].map((num) => (
                 <TouchableOpacity
-                  key={num}
-                  onPress={() => handleKeyPress(num)}
+                  onPress={() => handleKeyPress("backspace")}
                   activeOpacity={0.7}
                   className="flex-1 h-14 bg-surface-container-lowest shadow-sm border border-zinc-100 rounded-xl items-center justify-center active:scale-95"
                 >
-                  <Text className="text-headline-md font-bold text-on-surface">
-                    {num}
-                  </Text>
+                  <Feather
+                    name="delete"
+                    size={20}
+                    className="text-on-surface-variant"
+                  />
                 </TouchableOpacity>
-              ))}
-            </View>
-
-            <View className="flex-row gap-2">
-              <TouchableOpacity
-                onPress={() => handleKeyPress(".")}
-                activeOpacity={0.7}
-                className="flex-1 h-14 bg-surface-container-lowest shadow-sm border border-zinc-100 rounded-xl items-center justify-center active:scale-95"
-              >
-                <Text className="text-headline-md font-bold text-on-surface">
-                  .
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleKeyPress("0")}
-                activeOpacity={0.7}
-                className="flex-1 h-14 bg-surface-container-lowest shadow-sm border border-zinc-100 rounded-xl items-center justify-center active:scale-95"
-              >
-                <Text className="text-headline-md font-bold text-on-surface">
-                  0
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleKeyPress("backspace")}
-                activeOpacity={0.7}
-                className="flex-1 h-14 bg-surface-container-lowest shadow-sm border border-zinc-100 rounded-xl items-center justify-center active:scale-95"
-              >
-                <Feather
-                  name="delete"
-                  size={20}
-                  className="text-on-surface-variant"
-                />
-              </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
 
-        <View className="px-margin-edge">
-          <TouchableOpacity
-            onPress={handleSave}
-            activeOpacity={0.9}
-            className="w-full h-14 bg-primary rounded-xl flex-row items-center justify-center shadow-lg active:scale-95"
-          >
-            <Text className="text-body-lg font-bold text-on-primary">
-              Guardar Gasto
-            </Text>
-          </TouchableOpacity>
-        </View>
+          <View className="px-margin-edge">
+            <TouchableOpacity
+              onPress={handleSave}
+              activeOpacity={0.9}
+              className="w-full h-14 bg-primary rounded-xl flex-row items-center justify-center shadow-lg active:scale-95"
+            >
+              <Text className="text-body-lg font-bold text-on-primary">
+                Guardar Gasto
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     </View>
   );
