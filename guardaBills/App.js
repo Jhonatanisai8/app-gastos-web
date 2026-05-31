@@ -10,7 +10,7 @@ export default function App() {
   return (
     <View className="flex-1 bg-surface">
       {user ? (
-        <Home onLogout={() => setUser(null)} />
+        <Home onLogout={() => setUser(null)} userData={user} />
       ) : (
         <RegistrationLogin onLoginSuccess={(data) => setUser(data)} />
       )}

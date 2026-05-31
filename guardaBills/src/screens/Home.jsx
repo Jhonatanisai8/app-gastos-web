@@ -10,11 +10,11 @@ import {
 import { Feather, Ionicons } from "@expo/vector-icons";
 import TopAppBar from "../components/TopAppBar";
 
-export function Home({ onLogout }) {
+export function Home({ onLogout, userData }) {
   return (
     <SafeAreaView className="flex-1 bg-background w-full">
       {/* TopAppBar */}
-      <TopAppBar onLogout={onLogout}></TopAppBar>
+      <TopAppBar onLogout={onLogout} userData={userData}></TopAppBar>
 
       {/* Main Content Scroll Canvas */}
       <ScrollView
