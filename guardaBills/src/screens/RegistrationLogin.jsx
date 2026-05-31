@@ -16,7 +16,6 @@ export function RegistrationLogin({ onLoginSuccess }) {
   const [password, setPassword] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
 
-  //extraemos las funciones
   const { login, loading, error, authData } = useAuth();
 
   const handleLogin = async () => {
@@ -46,9 +45,7 @@ export function RegistrationLogin({ onLoginSuccess }) {
         className="px-margin-edge py-section-padding"
       >
         <View className="w-full max-w-md bg-surface-container-lowest rounded-[24px] p-6 shadow-sm flex flex-col gap-stack-lg self-center border border-surface-container/50">
-          {/* Brand Header */}
           <View className="flex flex-col items-center gap-stack-sm text-center">
-            {/* Wallet Icon */}
             <View className="w-16 h-16 bg-primary-container rounded-full flex items-center justify-center mb-stack-md shadow-sm">
               <Ionicons name="wallet-outline" size={32} color="#ffffff" />
             </View>
@@ -60,9 +57,7 @@ export function RegistrationLogin({ onLoginSuccess }) {
             </Text>
           </View>
 
-          {/* Login Form */}
           <View className="flex flex-col gap-gutter">
-            {/* Email Field */}
             <View className="flex flex-col gap-stack-sm">
               <Text className="text-sm font-semibold text-on-surface-variant">
                 Email
@@ -83,7 +78,6 @@ export function RegistrationLogin({ onLoginSuccess }) {
               </View>
             </View>
 
-            {/* Password Field */}
             <View className="flex flex-col gap-stack-sm">
               <Text className="text-sm font-semibold text-on-surface-variant">
                 Password
@@ -122,7 +116,6 @@ export function RegistrationLogin({ onLoginSuccess }) {
               </TouchableOpacity>
             </View>
 
-            {/* Actions */}
             <View className="flex flex-col gap-stack-md mt-stack-sm">
               <TouchableOpacity
                 className="w-full h-12 bg-primary items-center justify-center rounded-lg shadow-sm active:opacity-90"
@@ -151,3 +144,4 @@ export function RegistrationLogin({ onLoginSuccess }) {
 }
 
 export default RegistrationLogin;
+

@@ -15,7 +15,7 @@ export function TopAppBar({ onLogout, userData }) {
           className="w-8 h-8 rounded-full"
           style={{ width: 32, height: 32 }}
         />
-        <Text className="text-xl font-bold text-primary">{emailData}</Text>
+        <Text className="font-bold text-primary">{emailData}</Text>
       </View>
       <View className="flex-row items-center gap-2">
         <TouchableOpacity className="p-2 rounded-full active:bg-zinc-100">
