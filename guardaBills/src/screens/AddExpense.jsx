@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -6,51 +6,57 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
+import { useCategories } from "../hooks/useCategories";
+import { useExpense } from "../hooks/useExpense";
 
-const CATEGORIES = [
-  {
-    id: 1,
-    name: "Food",
-    icon: "restaurant-outline",
-    activeIcon: "restaurant",
-    color: "#0060ac",
-  },
-  {
-    id: 2,
-    name: "Transport",
-    icon: "car-outline",
-    activeIcon: "car",
-    color: "#003527",
-  },
-  {
-    id: 3,
-    name: "Housing",
-    icon: "home-outline",
-    activeIcon: "home",
-    color: "#273034",
-  },
-  {
-    id: 4,
-    name: "Clothes",
-    icon: "shirt-outline",
-    activeIcon: "shirt",
-    color: "#ba1a1a",
-  },
-  {
-    id: 5,
-    name: "Health",
-    icon: "medical-outline",
-    activeIcon: "medical",
-    color: "#0060ac",
-  },
-];
+const mapIconName = (apiIcon, isSelected) => {
+  switch (apiIcon) {
+    case "utensils":
+      return isSelected ? "restaurant" : "restaurant-outline";
+    case "car":
+      return isSelected ? "car" : "car-outline";
+    case "home":
+      return isSelected ? "home" : "home-outline";
+    case "film":
+      return isSelected ? "film" : "film-outline";
+    case "heartbeat":
+    case "heart":
+      return isSelected ? "heart" : "heart-outline";
+    default:
+      return isSelected ? "list" : "list-outline";
+  }
+};
 
-export function AddExpense({ onBack, onSave }) {
+export function AddExpense({ token, onBack, onSave }) {
   const [amount, setAmount] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [note, setNote] = useState("");
+
+  const {
+    data: categoriesResponse,
+    loading: loadingCategories,
+    obtenerListadoCategories,
+  } = useCategories();
+  const { loading: saving, registroExpense } = useExpense();
+
+  const categoriesList = categoriesResponse?.data || [];
+
+  useEffect(() => {
+    if (token) {
+      obtenerListadoCategories(token)
+        .then((res) => {
+          if (res && res.data && res.data.length > 0) {
+            setSelectedCategory(res.data[0].id);
+          }
+        })
+        .catch((err) => {
+          console.error("Error loading categories:", err);
+        });
+    }
+  }, [token, obtenerListadoCategories]);
 
   const handleKeyPress = (val) => {
     if (val === "backspace") {
@@ -76,14 +82,31 @@ export function AddExpense({ onBack, onSave }) {
 
   const displayAmount = amount === "" ? "0.00" : amount;
 
-  const handleSave = () => {
-    const category = CATEGORIES.find((c) => c.id === selectedCategory);
-    if (onSave) {
-      onSave({
-        amount: parseFloat(displayAmount) || 0,
-        category: category ? category.name : "",
-        note,
-      });
+  const handleSave = async () => {
+    const category = categoriesList.find((c) => c.id === selectedCategory);
+    if (!category) return;
+
+    if (parseFloat(displayAmount) <= 0) {
+      alert("Por favor ingrese un monto mayor a 0");
+      return;
+    }
+
+    const expensePayload = {
+      title: note || `Gasto de ${category.name}`,
+      description: note,
+      amount: parseFloat(displayAmount) || 0,
+      expenseDate: new Date().toISOString().split("T")[0],
+      type: "VARIABLE",
+      categoryId: category.id,
+    };
+
+    try {
+      const response = await registroExpense(expensePayload, token);
+      if (onSave) {
+        onSave(response.data);
+      }
+    } catch (err) {
+      console.error("Error al registrar gasto:", err);
     }
   };
 
@@ -109,51 +132,58 @@ export function AddExpense({ onBack, onSave }) {
             </View>
           </View>
 
-          <View className="w-full my-4">
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingHorizontal: 20, gap: 12 }}
-            >
-              {CATEGORIES.map((cat) => {
-                const isSelected = selectedCategory === cat.id;
-                return (
-                  <TouchableOpacity
-                    key={cat.id}
-                    onPress={() => setSelectedCategory(cat.id)}
-                    activeOpacity={0.8}
-                    className={`flex flex-col items-center justify-center w-20 h-24 rounded-2xl border transition-all ${
-                      isSelected
-                        ? "bg-surface-container-high border-secondary-container shadow-md"
-                        : "bg-surface-container-lowest border-outline-variant/30 opacity-70"
-                    }`}
-                  >
-                    <View
-                      className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
+          <View className="w-full my-4 justify-center items-center min-h-[96px]">
+            {loadingCategories ? (
+              <ActivityIndicator size="large" color="#0060ac" />
+            ) : (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingHorizontal: 20, gap: 12 }}
+              >
+                {categoriesList.map((cat) => {
+                  const isSelected = selectedCategory === cat.id;
+                  return (
+                    <TouchableOpacity
+                      key={cat.id}
+                      onPress={() => setSelectedCategory(cat.id)}
+                      activeOpacity={0.8}
+                      className={`flex flex-col items-center justify-center w-24 h-24 rounded-2xl border transition-all ${
                         isSelected
-                          ? "bg-secondary-container"
-                          : "bg-surface-container-low"
+                          ? "bg-surface-container-high border-secondary-container shadow-md"
+                          : "bg-surface-container-lowest border-outline-variant/30 opacity-70"
                       }`}
                     >
-                      <Ionicons
-                        name={isSelected ? cat.activeIcon : cat.icon}
-                        size={20}
-                        color={isSelected ? "#ffffff" : cat.color}
-                      />
-                    </View>
-                    <Text
-                      className={`text-[11px] font-semibold ${
-                        isSelected
-                          ? "text-on-secondary-container font-bold"
-                          : "text-on-surface-variant"
-                      }`}
-                    >
-                      {cat.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
+                      <View
+                        className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
+                          isSelected
+                            ? "bg-secondary-container"
+                            : "bg-surface-container-low"
+                        }`}
+                      >
+                        <Ionicons
+                          name={mapIconName(cat.icon, isSelected)}
+                          size={20}
+                          color={
+                            isSelected ? "#ffffff" : cat.color || "#0060ac"
+                          }
+                        />
+                      </View>
+                      <Text
+                        className={`text-[11px] font-semibold ${
+                          isSelected
+                            ? "text-on-secondary-container font-bold"
+                            : "text-on-surface-variant"
+                        }`}
+                        numberOfLines={1}
+                      >
+                        {cat.name}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            )}
           </View>
 
           <View className="px-margin-edge my-stack-md">
@@ -258,11 +288,16 @@ export function AddExpense({ onBack, onSave }) {
             <TouchableOpacity
               onPress={handleSave}
               activeOpacity={0.9}
+              disabled={saving || loadingCategories}
               className="w-full h-14 bg-primary rounded-xl flex-row items-center justify-center shadow-lg active:scale-95"
             >
-              <Text className="text-body-lg font-bold text-on-primary">
-                Guardar Gasto
-              </Text>
+              {saving ? (
+                <ActivityIndicator size="small" color="#ffffff" />
+              ) : (
+                <Text className="text-body-lg font-bold text-on-primary">
+                  Guardar Gasto
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
         </ScrollView>

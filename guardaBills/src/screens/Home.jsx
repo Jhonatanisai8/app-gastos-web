@@ -210,6 +210,7 @@ export function Home({ onLogout, userData }) {
         </ScrollView>
       ) : currentTab === "add" ? (
         <AddExpense 
+          token={userData.token}
           onBack={() => setCurrentTab("home")} 
           onSave={(data) => { 
             console.log("Expense saved:", data); 
