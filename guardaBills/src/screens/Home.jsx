@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import TopAppBar from "../components/TopAppBar";
+import BottomNavBar from "../components/BottomNavBar";
 
 export function Home({ onLogout, userData }) {
   return (
@@ -47,7 +48,7 @@ export function Home({ onLogout, userData }) {
                   </View>
                   <View>
                     <Text className="text-[10px] text-primary-fixed-dim font-medium uppercase">
-                      Income
+                      Ingresos
                     </Text>
                     <Text className="text-sm font-semibold text-white">
                       $4,200
@@ -62,7 +63,7 @@ export function Home({ onLogout, userData }) {
                   </View>
                   <View>
                     <Text className="text-[10px] text-primary-fixed-dim font-medium uppercase">
-                      Expenses
+                      Gastos
                     </Text>
                     <Text className="text-sm font-semibold text-white">
                       $1,850
@@ -220,35 +221,7 @@ export function Home({ onLogout, userData }) {
       </ScrollView>
 
       {/* BottomNavBar */}
-      <View className="bg-white/90 border-t border-zinc-100 absolute bottom-0 left-0 w-full flex-row justify-around items-center pt-3 pb-5 h-20 shadow-md">
-        <TouchableOpacity className="flex items-center justify-center group">
-          <Feather name="home" size={22} className="text-primary" />
-          <Text className="text-[10px] font-semibold mt-1 text-primary">
-            Home
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity className="flex items-center justify-center group">
-          <Feather name="bar-chart-2" size={22} className="text-zinc-400" />
-          <Text className="text-[10px] font-semibold mt-1 text-zinc-400">
-            Stats
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity className="flex items-center justify-center group">
-          <Feather name="plus-circle" size={22} className="text-zinc-400" />
-          <Text className="text-[10px] font-semibold mt-1 text-zinc-400">
-            Add
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity className="flex items-center justify-center group">
-          <Feather name="user" size={22} className="text-zinc-400" />
-          <Text className="text-[10px] font-semibold mt-1 text-zinc-400">
-            Profile
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <BottomNavBar />
     </SafeAreaView>
   );
 }
