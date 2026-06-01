@@ -1,11 +1,11 @@
 import apiClient from "../api/apiClient";
 
-export const obtenerCategories = async (token) => {
+export const obtenerCategories = async (token, type) => {
   try {
+    const params = type ? { type } : {};
     const response = await apiClient.get("/categories", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
+      params,
     });
     return response.data;
   } catch (error) {

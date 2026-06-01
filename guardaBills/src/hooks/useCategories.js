@@ -6,12 +6,12 @@ export const useCategories = () => {
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
 
-  const obtenerListadoCategories = useCallback(async (token) => {
+  const obtenerListadoCategories = useCallback(async (token, type) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await obtenerCategories(token);
+      const response = await obtenerCategories(token, type);
       setData(response);
       return response;
     } catch (error) {

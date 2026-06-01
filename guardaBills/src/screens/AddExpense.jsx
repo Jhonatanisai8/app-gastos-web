@@ -46,7 +46,7 @@ export function AddExpense({ token, onBack, onSave }) {
 
   useEffect(() => {
     if (token) {
-      obtenerListadoCategories(token)
+      obtenerListadoCategories(token, "EXPENSE")
         .then((res) => {
           if (res && res.data && res.data.length > 0) {
             setSelectedCategory(res.data[0].id);
