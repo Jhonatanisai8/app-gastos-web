@@ -1,6 +1,5 @@
 package com.isai.backend.category.entity;
 
-import com.isai.backend.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +16,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     private String icon;
@@ -26,10 +25,6 @@ public class Category {
 
     @Column(nullable = false)
     private String type;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 
     private LocalDateTime createdAt;
 

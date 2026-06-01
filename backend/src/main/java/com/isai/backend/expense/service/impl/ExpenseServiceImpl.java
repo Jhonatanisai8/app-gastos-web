@@ -52,9 +52,6 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-        if (!category.getUser().getId().equals(userId)) {
-            throw new ResourceNotFoundException("Category not found");
-        }
 
         ExpenseType expenseType;
         try {
@@ -85,9 +82,6 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-        if (!category.getUser().getId().equals(userId)) {
-            throw new ResourceNotFoundException("Category not found");
-        }
 
         ExpenseType expenseType;
         try {

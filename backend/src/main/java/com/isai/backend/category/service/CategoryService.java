@@ -7,8 +7,6 @@ import com.isai.backend.category.mapper.CategoryMapper;
 import com.isai.backend.category.repository.CategoryRepository;
 import com.isai.backend.common.exception.BadRequestException;
 import com.isai.backend.common.exception.ResourceNotFoundException;
-import com.isai.backend.user.entity.User;
-import com.isai.backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,29 +17,29 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
     private final CategoryMapper categoryMapper;
 
-    public List<CategoryResponse> getAllByUser(Long userId) {
-        return categoryRepository.findByUserId(userId)
+    public List<CategoryResponse> getAll() {
+        return categoryRepository.findAll()
                 .stream()
                 .map(categoryMapper::toResponse)
                 .toList();
     }
 
-    public CategoryResponse getById(Long id, Long userId) {
+    public List<CategoryResponse> getByType(String type) {
+        return categoryRepository.findByType(type.toUpperCase())
+                .stream()
+                .map(categoryMapper::toResponse)
+                .toList();
+    }
+
+    public CategoryResponse getById(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-        if (!category.getUser().getId().equals(userId)) {
-            throw new ResourceNotFoundException("Category not found");
-        }
         return categoryMapper.toResponse(category);
     }
 
-    public CategoryResponse create(CategoryRequest request, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
+    public CategoryResponse create(CategoryRequest request) {
         String type = request.getType().toUpperCase();
         if (!type.equals("EXPENSE") && !type.equals("INCOME")) {
             throw new BadRequestException("Type must be EXPENSE or INCOME");
@@ -49,17 +47,13 @@ public class CategoryService {
 
         Category category = categoryMapper.toEntity(request);
         category.setType(type);
-        category.setUser(user);
 
         return categoryMapper.toResponse(categoryRepository.save(category));
     }
 
-    public CategoryResponse update(Long id, CategoryRequest request, Long userId) {
+    public CategoryResponse update(Long id, CategoryRequest request) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-        if (!category.getUser().getId().equals(userId)) {
-            throw new ResourceNotFoundException("Category not found");
-        }
 
         String type = request.getType().toUpperCase();
         if (!type.equals("EXPENSE") && !type.equals("INCOME")) {
@@ -74,12 +68,9 @@ public class CategoryService {
         return categoryMapper.toResponse(categoryRepository.save(category));
     }
 
-    public void delete(Long id, Long userId) {
+    public void delete(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-        if (!category.getUser().getId().equals(userId)) {
-            throw new ResourceNotFoundException("Category not found");
-        }
         categoryRepository.delete(category);
     }
 }

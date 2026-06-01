@@ -8,8 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,43 +21,35 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<CategoryResponse>>> getAll(
-            @AuthenticationPrincipal UserDetails userDetails) {
-        Long userId = Long.valueOf(userDetails.getUsername());
-        return ResponseEntity.ok(ApiResponse.success(categoryService.getAllByUser(userId)));
+            @RequestParam(required = false) String type) {
+        if (type != null) {
+            return ResponseEntity.ok(ApiResponse.success(categoryService.getByType(type)));
+        }
+        return ResponseEntity.ok(ApiResponse.success(categoryService.getAll()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<CategoryResponse>> getById(
-            @PathVariable Long id,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        Long userId = Long.valueOf(userDetails.getUsername());
-        return ResponseEntity.ok(ApiResponse.success(categoryService.getById(id, userId)));
+    public ResponseEntity<ApiResponse<CategoryResponse>> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.success(categoryService.getById(id)));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<CategoryResponse>> create(
-            @Valid @RequestBody CategoryRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        Long userId = Long.valueOf(userDetails.getUsername());
+            @Valid @RequestBody CategoryRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.created(categoryService.create(request, userId)));
+                .body(ApiResponse.created(categoryService.create(request)));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<CategoryResponse>> update(
             @PathVariable Long id,
-            @Valid @RequestBody CategoryRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        Long userId = Long.valueOf(userDetails.getUsername());
-        return ResponseEntity.ok(ApiResponse.success(categoryService.update(id, request, userId)));
+            @Valid @RequestBody CategoryRequest request) {
+        return ResponseEntity.ok(ApiResponse.success(categoryService.update(id, request)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> delete(
-            @PathVariable Long id,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        Long userId = Long.valueOf(userDetails.getUsername());
-        categoryService.delete(id, userId);
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+        categoryService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

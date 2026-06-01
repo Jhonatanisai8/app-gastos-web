@@ -12,6 +12,5 @@ public interface CategoryMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "user", ignore = true)
     Category toEntity(CategoryRequest request);
 }
