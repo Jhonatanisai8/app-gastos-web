@@ -24,8 +24,10 @@ public class UserService {
     public UserDto updateProfile(Long userId, String name, String currency) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        if (name != null) user.setName(name);
-        if (currency != null) user.setCurrency(currency);
+        if (name != null)
+            user.setName(name);
+        if (currency != null)
+            user.setCurrency(currency);
         return userMapper.toDto(userRepository.save(user));
     }
 }
