@@ -12,6 +12,7 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import TopAppBar from "../components/TopAppBar";
 import BottomNavBar from "../components/BottomNavBar";
 import AddExpense from "./AddExpense";
+import AddIncome from "./AddIncome";
 import { useDashboard } from "../hooks/useDashboard";
 
 const getCurrencySymbol = (currency) => {
@@ -185,7 +186,11 @@ export function Home({ onLogout, userData }) {
                 </Text>
 
                 <View className="flex-row justify-between items-center mt-4 border-t border-white/10 pt-4">
-                  <View className="flex-row items-center gap-2">
+                  <TouchableOpacity
+                    onPress={() => setCurrentTab("addIncome")}
+                    activeOpacity={0.7}
+                    className="flex-row items-center gap-2"
+                  >
                     <View className="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center">
                       <Feather name="arrow-up-right" size={16} color="#b0f0d6" />
                     </View>
@@ -197,9 +202,13 @@ export function Home({ onLogout, userData }) {
                         {formatAmount(balance.income, currencySymbol)}
                       </Text>
                     </View>
-                  </View>
+                  </TouchableOpacity>
 
-                  <View className="flex-row items-center gap-2">
+                  <TouchableOpacity
+                    onPress={() => setCurrentTab("add")}
+                    activeOpacity={0.7}
+                    className="flex-row items-center gap-2"
+                  >
                     <View className="w-8 h-8 rounded-full bg-surface-tint flex items-center justify-center">
                       <Feather name="arrow-down-left" size={16} color="#ffffff" />
                     </View>
@@ -211,7 +220,7 @@ export function Home({ onLogout, userData }) {
                         {formatAmount(balance.expenses, currencySymbol)}
                       </Text>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -350,6 +359,16 @@ export function Home({ onLogout, userData }) {
           onBack={() => setCurrentTab("home")}
           onSave={(data) => {
             console.log("Expense saved:", data);
+            fetchDashboardData(); // Automatically reload dashboard statistics upon saving a transaction!
+            setCurrentTab("home");
+          }}
+        />
+      ) : currentTab === "addIncome" ? (
+        <AddIncome
+          token={userData.token}
+          onBack={() => setCurrentTab("home")}
+          onSave={(data) => {
+            console.log("Income saved:", data);
             fetchDashboardData(); // Automatically reload dashboard statistics upon saving a transaction!
             setCurrentTab("home");
           }}

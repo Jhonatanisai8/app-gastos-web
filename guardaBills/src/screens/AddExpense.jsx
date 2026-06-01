@@ -298,7 +298,7 @@ export function AddExpense({ token, onBack, onSave }) {
             </View>
           </View>
 
-          <View className="px-margin-edge">
+          <View className="px-margin-edge mt-12">
             <TouchableOpacity
               onPress={handleSave}
               activeOpacity={0.9}

@@ -30,7 +30,7 @@ const mapIconName = (apiIcon, isSelected) => {
   }
 };
 
-export function AddExpense({ token, onBack, onSave }) {
+export function AddIncome({ token, onBack, onSave }) {
   const [amount, setAmount] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [note, setNote] = useState("");
@@ -46,7 +46,7 @@ export function AddExpense({ token, onBack, onSave }) {
 
   useEffect(() => {
     if (token) {
-      obtenerListadoCategories(token, "EXPENSE")
+      obtenerListadoCategories(token, "INCOME") // Query INCOME categories instead of EXPENSE
         .then((res) => {
           if (res && res.data && res.data.length > 0) {
             setSelectedCategory(res.data[0].id);
@@ -93,7 +93,6 @@ export function AddExpense({ token, onBack, onSave }) {
     const category = categoriesList.find((c) => c.id === selectedCategory);
     if (!category) {
       alert("Por favor seleccione una categoría.");
-
       return;
     }
 
@@ -103,11 +102,10 @@ export function AddExpense({ token, onBack, onSave }) {
     }
 
     const expensePayload = {
-      title: note || `Gasto de ${category.name}`,
+      title: note || `Ingreso de ${category.name}`,
       description: note,
       amount: parseFloat(displayAmount) || 0,
       expenseDate: new Date().toISOString().split("T")[0],
-      type: "EXPENSE",
       categoryId: category.id,
     };
 
@@ -117,8 +115,8 @@ export function AddExpense({ token, onBack, onSave }) {
         onSave(response.data);
       }
     } catch (err) {
-      console.error("Error al registrar gasto:", err);
-      alert("Error al registrar gasto: " + err.message);
+      console.error("Error al registrar ingreso:", err);
+      alert("Error al registrar ingreso: " + err.message);
     }
   };
 
@@ -298,7 +296,7 @@ export function AddExpense({ token, onBack, onSave }) {
             </View>
           </View>
 
-          <View className="px-margin-edge">
+          <View className="px-margin-edge mt-12">
             <TouchableOpacity
               onPress={handleSave}
               activeOpacity={0.9}
@@ -309,7 +307,7 @@ export function AddExpense({ token, onBack, onSave }) {
                 <ActivityIndicator size="small" color="#ffffff" />
               ) : (
                 <Text className="text-body-lg font-bold text-on-primary">
-                  Guardar Gasto
+                  Guardar Ingreso
                 </Text>
               )}
             </TouchableOpacity>
@@ -320,4 +318,4 @@ export function AddExpense({ token, onBack, onSave }) {
   );
 }
 
-export default AddExpense;
+export default AddIncome;
