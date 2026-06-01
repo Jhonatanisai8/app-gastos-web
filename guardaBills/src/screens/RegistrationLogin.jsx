@@ -16,7 +16,7 @@ export function RegistrationLogin({ onLoginSuccess }) {
   const [password, setPassword] = useState("");
   const [secureTextEntry, setSecureTextEntry] = useState(true);
 
-  const { login, loading, error, authData } = useAuth();
+  const { login, register, loading, error, authData } = useAuth();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -33,6 +33,32 @@ export function RegistrationLogin({ onLoginSuccess }) {
       Alert.alert(
         "Error de Autenticación",
         error.message || "Credenciales incorrectas",
+      );
+    }
+  };
+
+  const handleRegister = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Por favor llena todos los campos.");
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+
+    const extractedName = email.split("@")[0] || "User";
+
+    try {
+      const data = await register(email, password, extractedName);
+      if (onLoginSuccess) {
+        onLoginSuccess(data);
+      }
+    } catch (error) {
+      Alert.alert(
+        "Error de Registro",
+        error.message || "No se pudo registrar el usuario",
       );
     }
   };
@@ -120,18 +146,21 @@ export function RegistrationLogin({ onLoginSuccess }) {
                 className="w-full h-12 bg-primary items-center justify-center rounded-lg shadow-sm active:opacity-90"
                 activeOpacity={0.8}
                 onPress={handleLogin}
+                disabled={loading}
               >
                 <Text className="text-on-primary font-semibold text-sm">
-                  Iniciar Sesión
+                  {loading ? "Cargando..." : "Iniciar Sesión"}
                 </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 className="w-full h-12 bg-secondary-fixed items-center justify-center rounded-lg active:opacity-90"
                 activeOpacity={0.8}
+                onPress={handleRegister}
+                disabled={loading}
               >
                 <Text className="text-on-secondary-fixed-variant font-semibold text-sm">
-                  Registrarse
+                  {loading ? "Cargando..." : "Registrarse"}
                 </Text>
               </TouchableOpacity>
             </View>
