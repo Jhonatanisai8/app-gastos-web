@@ -19,7 +19,6 @@ public class ExpenseResponse {
     private String description;
     private BigDecimal amount;
     private LocalDate expenseDate;
-    private String type;
     private Long categoryId;
     private String categoryName;
     private LocalDateTime createdAt;

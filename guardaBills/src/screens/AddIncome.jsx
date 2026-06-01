@@ -133,7 +133,7 @@ export function AddExpense({ token, onBack, onSave }) {
         >
           <View className="items-center justify-center py-stack-lg px-margin-edge mt-stack-md">
             <Text className="text-label-md font-semibold text-on-surface-variant mb-stack-sm">
-              Monto de Gasto
+              Amount
             </Text>
             <View className="flex-row items-center gap-2">
               <Text className="text-headline-lg font-bold text-primary-container">

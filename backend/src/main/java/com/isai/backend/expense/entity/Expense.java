@@ -33,10 +33,6 @@ public class Expense {
     @Column(nullable = false)
     private LocalDate expenseDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ExpenseType type;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

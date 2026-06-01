@@ -7,7 +7,6 @@ import com.isai.backend.common.exception.ResourceNotFoundException;
 import com.isai.backend.expense.dto.ExpenseRequest;
 import com.isai.backend.expense.dto.ExpenseResponse;
 import com.isai.backend.expense.entity.Expense;
-import com.isai.backend.expense.entity.ExpenseType;
 import com.isai.backend.expense.mapper.ExpenseMapper;
 import com.isai.backend.expense.repository.ExpenseRepository;
 import com.isai.backend.expense.service.ExpenseService;
@@ -53,16 +52,8 @@ public class ExpenseServiceImpl implements ExpenseService {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
-        ExpenseType expenseType;
-        try {
-            expenseType = ExpenseType.valueOf(request.getType().toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException("Type must be FIXED or VARIABLE");
-        }
-
         Expense expense = expenseMapper.toEntity(request);
         expense.setExpenseDate(java.time.LocalDate.now(java.time.ZoneId.of("America/Lima")));
-        expense.setType(expenseType);
         expense.setUser(user);
         expense.setCategory(category);
 
@@ -80,22 +71,10 @@ public class ExpenseServiceImpl implements ExpenseService {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
-        ExpenseType expenseType;
-        try {
-            expenseType = ExpenseType.valueOf(request.getType().toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException("Type must be FIXED or VARIABLE");
-        }
-
-        if (request.getExpenseDate().isAfter(java.time.LocalDate.now(java.time.ZoneId.of("America/Lima")))) {
-            throw new BadRequestException("Expense date cannot be in the future");
-        }
-
         expense.setTitle(request.getTitle());
         expense.setDescription(request.getDescription());
         expense.setAmount(request.getAmount());
         expense.setExpenseDate(request.getExpenseDate());
-        expense.setType(expenseType);
         expense.setCategory(category);
 
         return expenseMapper.toResponse(expenseRepository.save(expense));

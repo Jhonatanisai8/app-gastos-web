@@ -22,9 +22,6 @@ public class ExpenseRequest {
     @NotNull
     private LocalDate expenseDate;
 
-    @NotBlank
-    private String type;
-
     @NotNull
     private Long categoryId;
 }
