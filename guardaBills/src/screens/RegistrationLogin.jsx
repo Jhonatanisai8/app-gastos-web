@@ -26,7 +26,6 @@ export function RegistrationLogin({ onLoginSuccess }) {
 
     try {
       const data = await login(email, password);
-      console.log(data);
       if (onLoginSuccess) {
         onLoginSuccess(data);
       }
@@ -144,4 +143,3 @@ export function RegistrationLogin({ onLoginSuccess }) {
 }
 
 export default RegistrationLogin;
-
