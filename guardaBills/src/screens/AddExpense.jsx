@@ -83,8 +83,19 @@ export function AddExpense({ token, onBack, onSave }) {
   const displayAmount = amount === "" ? "0.00" : amount;
 
   const handleSave = async () => {
+    if (categoriesList.length === 0) {
+      alert(
+        "No hay categorías cargadas. Por favor, asegúrese de que el backend esté ejecutándose.",
+      );
+      return;
+    }
+
     const category = categoriesList.find((c) => c.id === selectedCategory);
-    if (!category) return;
+    if (!category) {
+      alert("Por favor seleccione una categoría.");
+
+      return;
+    }
 
     if (parseFloat(displayAmount) <= 0) {
       alert("Por favor ingrese un monto mayor a 0");
@@ -107,6 +118,7 @@ export function AddExpense({ token, onBack, onSave }) {
       }
     } catch (err) {
       console.error("Error al registrar gasto:", err);
+      alert("Error al registrar gasto: " + err.message);
     }
   };
 
@@ -117,6 +129,7 @@ export function AddExpense({ token, onBack, onSave }) {
           className="flex-1"
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={true}
         >
           <View className="items-center justify-center py-stack-lg px-margin-edge mt-stack-md">
             <Text className="text-label-md font-semibold text-on-surface-variant mb-stack-sm">
@@ -140,6 +153,7 @@ export function AddExpense({ token, onBack, onSave }) {
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{ paddingHorizontal: 20, gap: 12 }}
+                nestedScrollEnabled={true}
               >
                 {categoriesList.map((cat) => {
                   const isSelected = selectedCategory === cat.id;
@@ -148,18 +162,18 @@ export function AddExpense({ token, onBack, onSave }) {
                       key={cat.id}
                       onPress={() => setSelectedCategory(cat.id)}
                       activeOpacity={0.8}
-                      className={`flex flex-col items-center justify-center w-24 h-24 rounded-2xl border transition-all ${
-                        isSelected
-                          ? "bg-surface-container-high border-secondary-container shadow-md"
-                          : "bg-surface-container-lowest border-outline-variant/30 opacity-70"
-                      }`}
+                      className="flex flex-col items-center justify-center w-24 h-24 rounded-2xl border"
+                      style={{
+                        backgroundColor: isSelected ? "#e2e8f0" : "#ffffff",
+                        borderColor: isSelected ? "#0060ac" : "#e4e4e7",
+                        borderWidth: isSelected ? 2 : 1,
+                      }}
                     >
                       <View
-                        className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
-                          isSelected
-                            ? "bg-secondary-container"
-                            : "bg-surface-container-low"
-                        }`}
+                        className="w-10 h-10 rounded-full flex items-center justify-center mb-2"
+                        style={{
+                          backgroundColor: isSelected ? "#0060ac" : "#f4f4f5",
+                        }}
                       >
                         <Ionicons
                           name={mapIconName(cat.icon, isSelected)}
@@ -172,8 +186,8 @@ export function AddExpense({ token, onBack, onSave }) {
                       <Text
                         className={`text-[11px] font-semibold ${
                           isSelected
-                            ? "text-on-secondary-container font-bold"
-                            : "text-on-surface-variant"
+                            ? "text-blue-900 font-bold"
+                            : "text-zinc-600"
                         }`}
                         numberOfLines={1}
                       >

@@ -60,11 +60,8 @@ public class ExpenseServiceImpl implements ExpenseService {
             throw new BadRequestException("Type must be FIXED or VARIABLE");
         }
 
-        if (request.getExpenseDate().isAfter(java.time.LocalDate.now())) {
-            throw new BadRequestException("Expense date cannot be in the future");
-        }
-
         Expense expense = expenseMapper.toEntity(request);
+        expense.setExpenseDate(java.time.LocalDate.now(java.time.ZoneId.of("America/Lima")));
         expense.setType(expenseType);
         expense.setUser(user);
         expense.setCategory(category);
@@ -90,7 +87,7 @@ public class ExpenseServiceImpl implements ExpenseService {
             throw new BadRequestException("Type must be FIXED or VARIABLE");
         }
 
-        if (request.getExpenseDate().isAfter(java.time.LocalDate.now())) {
+        if (request.getExpenseDate().isAfter(java.time.LocalDate.now(java.time.ZoneId.of("America/Lima")))) {
             throw new BadRequestException("Expense date cannot be in the future");
         }
 
