@@ -1,0 +1,26 @@
+# Usamos una imagen base oficial de Java 21 ligera (compatible con ARM64 / Ampere)
+FROM eclipse-temurin:21-jre-alpine
+
+# Definimos el directorio de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copiamos el archivo JAR compilado desde el directorio target al contenedor
+COPY target/backend-0.0.1-SNAPSHOT.jar app.jar
+
+# Exponemos el puerto en el que corre nuestra app Spring Boot
+EXPOSE 8081
+
+# Definimos las variables de entorno por defecto (pueden ser sobrescritas al arrancar el contenedor)
+ENV PORT=8081
+ENV DB_HOST=127.0.0.1
+ENV DB_PORT=3306
+ENV DB_NAME=DB_NAME
+ENV DB_USER=DB_USER
+ENV DB_PASSWORD=DB_USER
+
+# Comando para ejecutar la aplicación
+ENTRYPOINT ["java", "-jar", "app.jar", \
+            "--server.port=${PORT}", \
+            "--spring.datasource.url=jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useSSL=false&serverTimezone=America/Lima&allowPublicKeyRetrieval=true", \
+            "--spring.datasource.username=${DB_USER}", \
+            "--spring.datasource.password=${DB_PASSWORD}"]
