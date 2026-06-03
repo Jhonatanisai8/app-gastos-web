@@ -2,3 +2,12 @@ backend/src/main/resources/application.properties
 .vscode/settings.json
 ui
 backend/Dockerfile
+
+# Ignore heavy directories in guardaBills to prevent them from being tracked by git or uploaded to EAS
+guardaBills/android/
+guardaBills/ios/
+guardaBills/node_modules/
+guardaBills/.expo/
+guardaBills/dist/
+guardaBills/.env*
+

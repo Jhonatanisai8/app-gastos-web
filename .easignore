@@ -1,0 +1,6 @@
+# Ignore heavy native and build folders in the subproject
+guardaBills/android/
+guardaBills/ios/
+guardaBills/node_modules/
+guardaBills/.expo/
+guardaBills/dist/
